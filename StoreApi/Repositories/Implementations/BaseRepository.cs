@@ -1,11 +1,8 @@
 ﻿using StoreApi.Database;
-using StoreApi.Models;
 using StoreApi.Models.Base;
 using StoreApi.Repositories.Interfaces;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace StoreApi.Repositories.Implementations
 {
@@ -48,9 +45,9 @@ namespace StoreApi.Repositories.Implementations
             var toUpdate = Context.Set<TDbModel>().FirstOrDefault(m => m.Id == id);
             if (toUpdate != null)
             {
-                Context.Set<TDbModel>().Update(toUpdate);
+                toUpdate = model;
             }
-//            Context.Update(toUpdate);
+            Context.Update(toUpdate);
             Context.SaveChanges();
             return toUpdate;
         }
@@ -60,9 +57,9 @@ namespace StoreApi.Repositories.Implementations
             var toUpdate = Context.Set<TDbModel>().FirstOrDefault(m => m.Id == id);
             if (toUpdate != null)
             {
-                Context.Set<TDbModel>().Update(toUpdate);
+                toUpdate = model;
             }
-            //            Context.Update(toUpdate);
+            Context.Update(toUpdate);
             Context.SaveChanges();
             return toUpdate;
         }

@@ -6,7 +6,6 @@ using StoreApi.Repositories.Interfaces;
 using StoreApi.Services.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Reflection.Metadata;
 using Xunit;
 
 namespace UnitTests

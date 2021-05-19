@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using StoreApi.Database;
+﻿using Microsoft.AspNetCore.Mvc;
 using StoreApi.Models;
 using StoreApi.Repositories.Interfaces;
 using StoreApi.Services.Interfaces;
@@ -37,10 +30,10 @@ namespace StoreApi.Controllers
         [HttpPost("{id}")]
         public JsonResult Post(int id, [FromBody] StoreBalanceModel inputData)
         {
-            var result = 200;
+            //var result = 200;
             
-            //return new JsonResult(StoreBalance.Update(id, inputData));
-            return new JsonResult(result);
+            return new JsonResult(StoreBalance.Update(id, inputData));
+            //return new JsonResult(result);
         }
     }
 }
