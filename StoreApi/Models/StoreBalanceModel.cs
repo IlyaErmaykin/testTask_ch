@@ -8,8 +8,8 @@ namespace StoreApi.Models
 {
     public class StoreBalanceModel : BaseModel
     {
-        public int StoreId { get; set; }
-        public int VendoreCode { get; set; }
+        public int Id { get; set; }
+        public long VendoreCode { get; set; }
         public int Count { get; set; }
         public DateTime Date { get; set; }
     }

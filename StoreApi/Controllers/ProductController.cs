@@ -12,54 +12,53 @@ using StoreApi.Services.Interfaces;
 
 namespace StoreApi.Controllers
 {
-    [Route("api/StoreItems")]
+    [Route("api/ProductItems")]
     [ApiController]
-    public class StoreController : ControllerBase
+    public class ProductController : ControllerBase
     {
         private IRepairService RepairService { get; set; }
-        private IBaseRepository<StoreModel> Stores { get; set; }
 
         private IBaseRepository<ProductModel> Products { get; set; }
 
-        public StoreController(IRepairService repairService, IBaseRepository<StoreModel> document)
+        public ProductController(IRepairService repairService, IBaseRepository<ProductModel> document)
         {
             RepairService = repairService;
-            Stores = document;
+            Products = document;
         }
 
-        //// GET: api/StoreItems
+        // GET: api/ProductItems
         [HttpGet]
         public JsonResult Get()
         {
-            return new JsonResult(Stores.GetAll());
+            return new JsonResult(Products.GetAll());
         }
 
-        // GET: api/StoreItems/5
+        // GET: api/ProductItems/5
         [HttpGet("{id}")]
         public JsonResult GetStoreItems(int id)
         {
-            return new JsonResult(Stores.Get(id)); ;
+            return new JsonResult(Products.Get(id)); ;
         }
 
-        // POST: api/StoreItems
+        // POST: api/ProductItems
         [HttpPost]
-        public JsonResult Post([FromBody] StoreModel inputData)
+        public JsonResult Post([FromBody] ProductModel inputData)
         {
-            return new JsonResult(Stores.Create(inputData));
+            return new JsonResult(Products.Create(inputData));
         }
 
-        // DELETE: api/StoreItems
+        // DELETE: api/ProductItems/{id}
         [HttpDelete("{id}")]
         public JsonResult Delete(int id)
         {
             bool success = true;
-            var document = Stores.Get(id);
+            var document = Products.Get(id);
 
             try
             {
                 if (document != null)
                 {
-                    Stores.Delete(document.Id);
+                    Products.Delete(document.Id);
                 }
                 else
                 {

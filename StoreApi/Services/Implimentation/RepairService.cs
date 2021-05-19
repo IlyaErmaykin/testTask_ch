@@ -29,7 +29,8 @@ namespace StoreApi.Services.Implimentation
 
             Product.Create(new ProductModel
             {
-                VandoreCode = vendoreCode,
+                Id = Convert.ToInt64(carId),
+                VendoreCode = vendoreCode,
                 Name = String.Format($"Name{rand.Next()}"),
                 Unit = String.Format($"Unit{rand.Next()}"),
                 Price = rand.NextDouble()
@@ -40,7 +41,7 @@ namespace StoreApi.Services.Implimentation
 
             StoreBalance.Create(new StoreBalanceModel
             {
-                StoreId = store.Id,
+                Id = store.Id,
                 VendoreCode = vCode.Id,
                 Count = 999999,
                 Date = DateTime.Now
