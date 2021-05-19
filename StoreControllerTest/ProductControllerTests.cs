@@ -6,40 +6,42 @@ using StoreApi.Repositories.Interfaces;
 using StoreApi.Services.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Reflection.Metadata;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace UnitTests
 {
-    public class StoreControllerTests
+    public class ProductControllerTests
     {
         [Fact]
         public static void GetDataMessage()
         {
-            var mockStore = new Mock<IBaseRepository<StoreModel>>();
+            var mockProduct = new Mock<IBaseRepository<ProductModel>>();
             var mockService = new Mock<IRepairService>();
             var document = GetDoc();
-            mockStore.Setup(x => x.GetAll()).Returns(new List<StoreModel> { document });
+            mockProduct.Setup(x => x.GetAll()).Returns(new List<ProductModel> { document });
 
             // Arrange
-            StoreController controller = new StoreController(mockService.Object, mockStore.Object);
+            ProductController controller = new ProductController(mockService.Object, mockProduct.Object);
 
             // Act
             JsonResult result = controller.Get() as JsonResult;
 
             // Assert
-            Assert.Equal(new List<StoreModel> { document }, result?.Value);
+            Assert.Equal(new List<ProductModel> { document }, result?.Value);
         }
 
         [Fact]
         public void GetNotNull()
         {
-            var mockStore = new Mock<IBaseRepository<StoreModel>>();
+            var mockProduct = new Mock<IBaseRepository<ProductModel>>();
             var mockService = new Mock<IRepairService>();
-            mockStore.Setup(x => x.Create(GetDoc())).Returns(GetDoc());
+            mockProduct.Setup(x => x.Create(GetDoc())).Returns(GetDoc());
 
             // Arrange
-            StoreController controller = new StoreController(mockService.Object, mockStore.Object);
+            ProductController controller = new ProductController(mockService.Object, mockProduct.Object);
             // Act
             JsonResult result = controller.Get() as JsonResult;
             // Assert
@@ -49,13 +51,13 @@ namespace UnitTests
         [Fact]
         public void PostDataMessage()
         {
-            var mockStore = new Mock<IBaseRepository<StoreModel>>();
+            var mockProduct = new Mock<IBaseRepository<ProductModel>>();
             var mockService = new Mock<IRepairService>();
-            mockStore.Setup(x => x.Create(GetDoc())).Returns(GetDoc());
+            mockProduct.Setup(x => x.Create(GetDoc())).Returns(GetDoc());
             var document = GetDoc();
 
             // Arrange
-            StoreController controller = new StoreController(mockService.Object, mockStore.Object);
+            ProductController controller = new ProductController(mockService.Object, mockProduct.Object);
 
             // Act
             JsonResult result = controller.Post(document) as JsonResult;
@@ -67,15 +69,15 @@ namespace UnitTests
         [Fact]
         public void UpdateDataMessage()
         {
-            var mockStore = new Mock<IBaseRepository<StoreModel>>();
+            var mockProduct = new Mock<IBaseRepository<ProductModel>>();
             var mockService = new Mock<IRepairService>();
             var document = GetDoc();
 
-            mockStore.Setup(x => x.Get(document.Id)).Returns(document);
-            mockStore.Setup(x => x.Update(document.Id, document)).Returns(document);
+            mockProduct.Setup(x => x.Get(document.Id)).Returns(document);
+            mockProduct.Setup(x => x.Update(document.Id, document)).Returns(document);
 
             // Arrange
-            StoreController controller = new StoreController(mockService.Object, mockStore.Object);
+            ProductController controller = new ProductController(mockService.Object, mockProduct.Object);
 
             // Act
             JsonResult result = controller.Post(document) as JsonResult;
@@ -87,15 +89,15 @@ namespace UnitTests
         [Fact]
         public void DeleteDataMessage()
         {
-            var mockStore = new Mock<IBaseRepository<StoreModel>>();
+            var mockProduct = new Mock<IBaseRepository<ProductModel>>();
             var mockService = new Mock<IRepairService>();
             var doc = GetDoc();
 
-            mockStore.Setup(x => x.Get(doc.Id)).Returns(doc);
-            mockStore.Setup(x => x.Delete(doc.Id));
+            mockProduct.Setup(x => x.Get(doc.Id)).Returns(doc);
+            mockProduct.Setup(x => x.Delete(doc.Id));
 
             // Arrange
-            StoreController controller = new StoreController(mockService.Object, mockStore.Object);
+            ProductController controller = new ProductController(mockService.Object, mockProduct.Object);
 
             // Act
             JsonResult result = controller.Delete(doc.Id) as JsonResult;
@@ -104,7 +106,7 @@ namespace UnitTests
             Assert.Equal("Delete successful", result?.Value);
         }
 
-        public static StoreModel GetDoc()
+        public static ProductModel GetDoc()
         {
             var mockStore = new Mock<IBaseRepository<StoreModel>>();
             var mockStoreBalance = new Mock<IBaseRepository<StoreBalanceModel>>();
@@ -126,13 +128,14 @@ namespace UnitTests
                 Date = DateTime.Now
             }));
 
-            return new StoreModel
+            return new ProductModel
             {
                 Id = 1,
-                Name = "TEST",
-                Storekeeper = "TEST"
+                VendoreCode = 999999,
+                Unit = "TEST",
+                Price = 0.0
+                
             };
         }
     }
 }
-

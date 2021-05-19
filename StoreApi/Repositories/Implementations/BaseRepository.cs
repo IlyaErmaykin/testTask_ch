@@ -55,6 +55,18 @@ namespace StoreApi.Repositories.Implementations
             return toUpdate;
         }
 
+        public TDbModel Update(long id, TDbModel model)
+        {
+            var toUpdate = Context.Set<TDbModel>().FirstOrDefault(m => m.Id == id);
+            if (toUpdate != null)
+            {
+                Context.Set<TDbModel>().Update(toUpdate);
+            }
+            //            Context.Update(toUpdate);
+            Context.SaveChanges();
+            return toUpdate;
+        }
+
         public TDbModel Get(int id)
         {
             return Context.Set<TDbModel>().FirstOrDefault(m => m.Id == id);

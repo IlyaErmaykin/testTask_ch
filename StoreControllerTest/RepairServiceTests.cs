@@ -11,55 +11,57 @@ using Xunit;
 
 namespace UnitTests
 {
-    class RepairServiceTests
+    public class RepairServiceTests
     {
         [Fact]
         public void WorkSuccessTest()
         {
             var serviceMock = new Mock<IRepairService>();
-            var mockCars = new Mock<IBaseRepository<StoreModel>>();
-            var mockWorkers = new Mock<IBaseRepository<StoreBalanceModel>>();
-            var mockDocs = new Mock<IBaseRepository<ProductModel>>();
-            var car = CreateCar(Guid.NewGuid());
-            var worker = CreateWorker(Guid.NewGuid());
-            var doc = CreateDoc(Guid.NewGuid(), worker.Id, car.Id);
+            var mockStore = new Mock<IBaseRepository<StoreModel>>();
+            var mockProduct = new Mock<IBaseRepository<ProductModel>>();
+            var mockStoreBalance = new Mock<IBaseRepository<StoreBalanceModel>>();
+            var store = CreateStore(Guid.NewGuid());
+            var product = CreateProduct(Guid.NewGuid());
+            //var storeBalance = CreateStoreBalance(Guid.NewGuid(), product.Id, store.Id);
 
-            mockCars.Setup(x => x.Create(car)).Returns(car);
-            mockDocs.Setup(x => x.Create(doc)).Returns(doc);
-            mockWorkers.Setup(x => x.Create(worker)).Returns(worker);
+            mockStore.Setup(x => x.Create(store)).Returns(store);
+            mockProduct.Setup(x => x.Create(product)).Returns(product);
+            //mockStoreBalance.Setup(x => x.Create(storeBalance)).Returns(storeBalance);
 
             serviceMock.Object.Work();
 
             serviceMock.Verify(x => x.Work());
         }
 
-        private StoreModel CreateCar(int carId)
+        private StoreModel CreateStore(Guid carId)
         {
             return new StoreModel()
             {
-                Id = carId,
-                Name = "Engine Oil",
-                Storekeeper = "Иванов ИИ"
+                Id = Convert.ToInt32(carId),
+                Name = "TEST_NAME",
+                Storekeeper = "TEST_USER"
             };
         }
 
-        private StoreBalanceModel CreateWorker(Guid workerId)
+        private ProductModel CreateProduct(Guid prodictId)
+        {
+            return new ProductModel
+            {
+                Id = Convert.ToInt64(prodictId),
+                VendoreCode = 1,
+                Name = "TEST",
+                Price = 0.0,
+                Unit = "TEST"
+            };
+        }
+        private StoreBalanceModel CreateStoreBalance(Guid docId, Guid workerId, Guid carId)
         {
             return new StoreBalanceModel()
             {
-                Id = workerId,
-                Name = "worker",
-                Position = "manager",
-                Telephone = "89165555555"
-            };
-        }
-        private Document CreateDoc(Guid docId, Guid workerId, Guid carId)
-        {
-            return new Document
-            {
-                Id = docId,
-                CarId = carId,
-                WorkerId = workerId
+                Id = Convert.ToInt32(workerId),
+                VendoreCode = 99999999,
+                Count = 1,
+                Date = DateTime.Now
             };
         }
     }

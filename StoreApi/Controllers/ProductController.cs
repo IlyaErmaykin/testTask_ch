@@ -72,5 +72,31 @@ namespace StoreApi.Controllers
 
             return success ? new JsonResult("Delete successful") : new JsonResult("Delete was not successful");
         }
+
+        // DELETE: api/ProductItems/{id}
+        [HttpDelete("{id}")]
+        public JsonResult Delete(long id)
+        {
+            bool success = true;
+            var document = Products.Get(id);
+
+            try
+            {
+                if (document != null)
+                {
+                    Products.Delete(document.Id);
+                }
+                else
+                {
+                    success = false;
+                }
+            }
+            catch (Exception)
+            {
+                success = false;
+            }
+
+            return success ? new JsonResult("Delete successful") : new JsonResult("Delete was not successful");
+        }
     }
 }

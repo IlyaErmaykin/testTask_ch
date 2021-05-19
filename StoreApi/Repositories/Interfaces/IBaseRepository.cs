@@ -13,6 +13,7 @@ namespace StoreApi.Repositories.Interfaces
         public TDbModel Get(long id);
         public TDbModel Create(TDbModel model);
         public TDbModel Update(int id, TDbModel model);
+        public TDbModel Update(long id, TDbModel model);
         public void Delete(int id);
         public void Delete(long id);
     }
