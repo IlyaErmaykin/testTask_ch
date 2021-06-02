@@ -3,12 +3,14 @@ using Microsoft.AspNetCore.Mvc;
 using StoreApi.Models;
 using StoreApi.Repositories.Interfaces;
 using StoreApi.Services.Interfaces;
+using StoreApi.Controllers.Base;
+using System.Collections.Generic;
 
 namespace StoreApi.Controllers
 {
     [Route("api/ProductItems")]
     [ApiController]
-    public class ProductController : ControllerBase
+    public class ProductController : BaseController
     {
         private IRepairService RepairService { get; set; }
 
@@ -24,73 +26,71 @@ namespace StoreApi.Controllers
         [HttpGet]
         public JsonResult Get()
         {
-            return new JsonResult(Products.GetAll());
+            List<ProductModel> result = null;
+            var output = "";
+            try
+            {
+                result = Products.GetAll();
+                output = "Request seccess";
+            }
+            catch (Exception ex)
+            {
+                return JsonError(ex.Message);
+            }
+            return JsonOk(output, result);
         }
 
         // GET: api/ProductItems/5
         [HttpGet("{id}")]
         public JsonResult GetStoreItems(int id)
         {
-            return new JsonResult(Products.Get(id)); ;
+            ProductModel result = null;
+            var output = "";
+            try
+            {
+                result = Products.Get(id);
+                output = "Request success";
+            }
+            catch (Exception ex)
+            {
+                return JsonError(ex.Message);
+            }
+            return JsonOk(output, result);
         }
 
         // POST: api/ProductItems
         [HttpPost]
         public JsonResult Post([FromBody] ProductModel inputData)
         {
-            return new JsonResult(Products.Create(inputData));
-        }
-
-        // DELETE: api/ProductItems/{id}
-        [HttpDelete("{id}")]
-        public JsonResult Delete(int id)
-        {
-            bool success = true;
-            var document = Products.Get(id);
-
+            ProductModel result = null;
+            var output = "";
             try
             {
-                if (document != null)
-                {
-                    Products.Delete(document.Id);
-                }
-                else
-                {
-                    success = false;
-                }
+                result = Products.Create(inputData);
+                output = "Product Create";
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                success = false;
+                return JsonError(ex.Message);
             }
 
-            return success ? new JsonResult("Delete successful") : new JsonResult("Delete was not successful");
+            return JsonOk(output, result);
         }
 
         // DELETE: api/ProductItems/{id}
         [HttpDelete("{id}")]
         public JsonResult Delete(long id)
         {
-            bool success = true;
-            var document = Products.Get(id);
-
             try
             {
-                if (document != null)
-                {
-                    Products.Delete(document.Id);
-                }
-                else
-                {
-                    success = false;
-                }
+                var product = Products.Get(id) ?? throw new ArgumentException("Product not found");
+                Products.Delete(product.Id);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                success = false;
+                return JsonError(ex.Message);
             }
-
-            return success ? new JsonResult("Delete successful") : new JsonResult("Delete was not successful");
+            return JsonOk("Delete success");
         }
     }
 }

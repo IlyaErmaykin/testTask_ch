@@ -3,17 +3,17 @@ using Microsoft.AspNetCore.Mvc;
 using StoreApi.Models;
 using StoreApi.Repositories.Interfaces;
 using StoreApi.Services.Interfaces;
+using StoreApi.Controllers.Base;
+using System.Collections.Generic;
 
 namespace StoreApi.Controllers
 {
     [Route("api/StoreItems")]
     [ApiController]
-    public class StoreController : ControllerBase
+    public class StoreController : BaseController
     {
         private IRepairService RepairService { get; set; }
         private IBaseRepository<StoreModel> Stores { get; set; }
-
-        private IBaseRepository<ProductModel> Products { get; set; }
 
         public StoreController(IRepairService repairService, IBaseRepository<StoreModel> document)
         {
@@ -25,47 +25,70 @@ namespace StoreApi.Controllers
         [HttpGet]
         public JsonResult Get()
         {
-            return new JsonResult(Stores.GetAll());
+            List<StoreModel> result = null;
+            var output = "";
+            try
+            {
+                result = Stores.GetAll();
+                output = "Request success";
+            }
+            catch (Exception ex)
+            {
+                return JsonError(ex.Message);
+            }
+            return JsonOk(output, result);
         }
 
         // GET: api/StoreItems/5
         [HttpGet("{id}")]
         public JsonResult GetStoreItems(int id)
         {
-            return new JsonResult(Stores.Get(id)); ;
+            StoreModel result = null;
+            var output = "";
+            try
+            {
+                result = Stores.Get(id);
+                output = "Request success";
+            }
+            catch (Exception ex)
+            {
+                return JsonError(ex.Message);
+            }
+            return JsonOk(output, result);
         }
 
         // POST: api/StoreItems
         [HttpPost]
         public JsonResult Post([FromBody] StoreModel inputData)
         {
-            return new JsonResult(Stores.Create(inputData));
+            StoreModel result = null;
+            var output = "";
+            try
+            {
+                result = Stores.Create(inputData);
+                output = "Store Create";
+            }
+            catch (Exception ex)
+            {
+                return JsonError(ex.Message);
+            }
+            return JsonOk(output, result);
         }
 
         // DELETE: api/StoreItems
         [HttpDelete("{id}")]
         public JsonResult Delete(int id)
         {
-            bool success = true;
-            var document = Stores.Get(id);
-
             try
             {
-                if (document != null)
-                {
-                    Stores.Delete(document.Id);
-                }
-                else
-                {
-                    success = false;
-                }
+                var store = Stores.Get(id) ?? throw new ArgumentNullException("Store not found");
+                Stores.Delete(store.Id);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                success = false;
+                return JsonError(ex.Message);
             }
-
-            return success ? new JsonResult("Delete successful") : new JsonResult("Delete was not successful");
+            return JsonOk("Delete successful");
         }
     }
 }
