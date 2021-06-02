@@ -1,13 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using StoreApi.Controllers.Base;
 using StoreApi.Models;
 using StoreApi.Repositories.Interfaces;
 using StoreApi.Services.Interfaces;
+using System;
+using System.Collections.Generic;
 
 namespace StoreApi.Controllers
 {
     [Route("api/Balance")]
     [ApiController]
-    public class StoreBalanceController : ControllerBase
+    public class StoreBalanceController : BaseController
     {
         private IRepairService RepairService { get; set; }
 
@@ -23,17 +26,34 @@ namespace StoreApi.Controllers
         [HttpGet]
         public JsonResult Get()
         {
-            return new JsonResult(StoreBalance.GetAll());
+            List<StoreBalanceModel> result = null;
+            var output = "";
+            try
+            {
+                result = StoreBalance.GetAll();
+                output = "Request success";
+            }
+            catch (Exception ex)
+            {
+                return JsonError(ex.Message);
+            }
+            return JsonOk(output, result);
         }
 
         // POST: api/Balance
         [HttpPost("{id}")]
         public JsonResult Post(int id, [FromBody] StoreBalanceModel inputData)
         {
-            //var result = 200;
-            
-            return new JsonResult(StoreBalance.Update(id, inputData));
-            //return new JsonResult(result);
+            try
+            {
+                var storeBalance = StoreBalance.Get(id) ?? throw new ArgumentNullException("Product not found");
+                StoreBalance.Update(id, inputData);
+            }
+            catch (Exception ex)
+            {
+                return JsonError(ex.Message);
+            }
+            return JsonOk("Update success");
         }
     }
 }
